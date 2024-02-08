@@ -4,6 +4,10 @@ AXIOM_PATH="$HOME/.axiom"
 source "$AXIOM_PATH/interact/includes/appliance.sh"
 LOG="$AXIOM_PATH/log.txt"
 resource_group="$(jq -r '.resource_group' "$AXIOM_PATH"/axiom.json)"
+nsg_ip_filter="$(jq -r '.nsg_ip_filter' "$AXIOM_PATH"/axiom.json)"
+plan_name="$(jq -r '.builders[].plan_info.plan_name' "$AXIOM_PATH"/images/builders/azure.json)"
+plan_product="$(jq -r '.builders[].plan_info.plan_product' "$AXIOM_PATH"/images/builders/azure.json)"
+plan_publisher="$(jq -r '.builders[].plan_info.plan_publisher' "$AXIOM_PATH"/images/builders/azure.json)"
 
 
 poweron() {
@@ -70,13 +74,29 @@ create_instance() {
 	size_slug="$3"
 	region="$4"
 	boot_script="$5"
-    sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
+   	sshkey="$(cat "$AXIOM_PATH/axiom.json" | jq -r '.sshkey')"
 
 	#location="$(az account list-locations | jq -r ".[] | select(.name==\"$region\") | .displayName")"
 	location="$region"
-
-  az vm create --resource-group $resource_group --name "$name" --image "$image_id" --location "$location" --size "$size_slug" --tags "$name"=True --os-disk-delete-option delete --data-disk-delete-option delete --nic-delete-option delete --admin-username op --ssh-key-values ~/.ssh/$sshkey.pub >/dev/null 2>&1
-	az vm open-port --resource-group $resource_group --name "$name" --port 0-65535 >/dev/null 2>&1 
+	if [[ -z "$plan_publisher" ]]; then
+		plan_info=""
+	else
+		plan_info="--plan-name $plan_name --plan-product $plan_product --plan-publisher $plan_publisher"
+	fi
+	if [[ -z "$nsg_ip_filter" ]]; then
+		az vm create $plan_info --resource-group $resource_group --name "$name" --image "$image_id" --location "$location" --size "$size_slug" --tags "$name"=True --os-disk-delete-option delete --data-disk-delete-option delete --nic-delete-option delete --admin-username op --ssh-key-values ~/.ssh/$sshkey.pub >/dev/null 2>&1
+		az vm open-port --resource-group $resource_group --name "$name" --port 0-65535 >/dev/null 2>&1 
+	else
+		nsg_name=$(echo "${name%%[0-9]*}NSG${region}"|tr '-' '_'| tr ' ' '_')
+		# Test if nsg exists
+		if [ ! $(az network nsg show -g $resource_group -n $nsg_name > /dev/null 2>&1) ]; then
+			az network nsg create --resource-group ${resource_group} --name $nsg_name --location $region --no-wait "false" > /dev/null 2>&1
+			az network nsg rule create --resource-group ${resource_group} --nsg-name $nsg_name --name AllowSSH_Reconftw_Axiom --no-wait "false" --access Allow --protocol Tcp --direction Inbound --priority 100 --source-address-prefix "${nsg_ip_filter}" --source-port-range "*" --destination-address-prefix "*" --destination-port-range 2266 > /dev/null 2>&1
+			sleep 30
+		fi
+		az vm create $plan_info --nsg ${nsg_name} --resource-group $resource_group --name "$name" --image "$image_id" --location "$location" --size "$size_slug" --tags "$name"=True --os-disk-delete-option delete --data-disk-delete-option delete --nic-delete-option delete --admin-username op --ssh-key-values ~/.ssh/$sshkey.pub >/dev/null 2>&1
+		az network nsg update --name $nsg_name --resource-group $resource_group --set tags".${name}"=\"True\" > /dev/null 2>&1
+	fi
 	sleep 260
 }
 
@@ -134,7 +154,7 @@ delete_instance() {
 		# It actually left over a public-ip, network security group and the virutal network, and here is the way to do it
 		az resource delete --ids $(az network public-ip list --query '[?ipAddress==`null`].[id]' -otsv | grep $name) >/dev/null 2>&1
 		az resource delete --ids $(az network nsg list --query "[?(subnets==null) && (networkInterfaces==null)].id" -o tsv | grep $name) >/dev/null 2>&1
-    az resource delete --ids $(az network nic list --query '[?virtualMachine==`null` && privateEndpoint==`null`].[id]' -o tsv | grep $name) >/dev/null 2>&1
+    		az resource delete --ids $(az network nic list --query '[?virtualMachine==`null` && privateEndpoint==`null`].[id]' -o tsv | grep $name) >/dev/null 2>&1
     
     else
     	# az vm delete --name "$name" --resource-group $resource_group
@@ -162,7 +182,7 @@ regions() {
 
 instance_sizes() {
 	location="$(jq -r '.region?' "$AXIOM_PATH/axiom.json")"
-    az vm list-sizes --location "$location" --resource-group $resource_group
+    	az vm list-sizes --location "$location" --resource-group $resource_group
 }
 
 snapshots() {

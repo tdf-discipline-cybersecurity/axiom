@@ -93,9 +93,9 @@ fi
 mkdir -p /tmp/packer-ibm/
  if [[ ! -f /tmp/packer-ibm/packer ]]; then
   if [[ $BASEOS == "Linux" ]]; then
-   wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_linux_amd64.zip && cd /tmp/ && unzip packer.zip && mv packer /tmp/packer-ibm/ && rm /tmp/packer.zip
+   wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/${HashiCorpPackerVersion}/packer_${HashiCorpPackerVersion}_linux_amd64.zip && cd /tmp/ && unzip packer.zip && mv packer /tmp/packer-ibm/ && rm /tmp/packer.zip
   elif [[ $BASEOS == "Darwin" ]]; then
-   wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_darwin_amd64.zip && cd /tmp/ && unzip packer.zip && mv packer /tmp/packer-ibm/ && rm /tmp/packer.zip 
+   wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/${HashiCorpPackerVersion}/packer_${HashiCorpPackerVersion}_darwin_amd64.zip && cd /tmp/ && unzip packer.zip && mv packer /tmp/packer-ibm/ && rm /tmp/packer.zip 
 fi
 
 BASEOS="$(uname)"
@@ -115,7 +115,7 @@ if [[ ! -f "$HOME/.packer.d/plugins/packer-builder-ibmcloud" ]]; then
  echo -n -e "${Blue}Installing IBM Cloud Packer Builder (https://github.com/IBM/packer-plugin-ibmcloud/):\n y/n >> ${Color_Off}"
  os="$(uname -s | tr '[:upper:]' '[:lower:]')"
  mkdir -p ~/.packer.d/plugins/
- wget https://github.com/IBM/packer-plugin-ibmcloud/releases/download/v1.0.1/packer-builder-ibmcloud_1.0.1_linux_64-bit.tar.gz -O - | tar -xz -C ~/.packer.d/plugins/
+ wget https://github.com/IBM/packer-plugin-ibmcloud/releases/download/${IBMPackerVersion}/packer-builder-ibmcloud_${IBMPackerVersion}_x5.0_linux_64-bit.tar.gz -O - | tar -xz -C ~/.packer.d/plugins/
 fi
 
 function getUsernameAPIkey {

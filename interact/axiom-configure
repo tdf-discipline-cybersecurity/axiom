@@ -31,8 +31,8 @@ function bash_shell(){
     if [[ -d "/usr/local/go/" ]] ; then
     echo -e "${Blue}Golang already installed, skipping...${Color_Off}" 
     else
-    echo -e "${Blue}Installing Golang 1.19.1${Color_Off}"
-    wget -q https://golang.org/dl/go1.19.1.linux-amd64.tar.gz && sudo tar -C /usr/local -xzf go1.19.1.linux-amd64.tar.gz && rm go1.19.1.linux-amd64.tar.gz
+    echo -e "${Blue}Installing Golang ${GolangVersion}${Color_Off}"
+    wget -q https://golang.org/dl/go${GolangVersion}.linux-amd64.tar.gz && sudo tar -C /usr/local -xzf go${GolangVersion}.linux-amd64.tar.gz && rm go${GolangVersion}.linux-amd64.tar.gz
     fi
     mkdir -p "${HOME}/go"
     export GOPATH=$HOME/go
@@ -54,8 +54,8 @@ function zsh_shell(){
     if [[ -d "/usr/local/go/" ]] ; then
     echo -e "${Blue}Golang already installed, skipping...${Color_Off}" 
     else
-    echo -e "${Blue}Installing Golang 1.19.1${Color_Off}"
-    wget -q https://golang.org/dl/go1.19.1.linux-amd64.tar.gz && sudo tar -C /usr/local -xzf go1.19.1.linux-amd64.tar.gz && rm go1.19.1.linux-amd64.tar.gz
+    echo -e "${Blue}Installing Golang ${GolangVersion}${Color_Off}"
+    wget -q https://golang.org/dl/go${GolangVersion}.linux-amd64.tar.gz && sudo tar -C /usr/local -xzf go${GolangVersion}.linux-amd64.tar.gz && rm go${GolangVersion}.linux-amd64.tar.gz
     fi
     mkdir -p "${HOME}/go"
     export GOPATH=$HOME/go
@@ -77,8 +77,8 @@ function omz_shell(){
     if [[ -d "/usr/local/go/" ]] ; then
     echo -e "${Blue}Golang already installed, skipping...${Color_Off}" 
     else
-    echo -e "${Blue}Installing Golang 1.19.1${Color_Off}"
-    wget -q https://golang.org/dl/go1.19.1.linux-amd64.tar.gz && sudo tar -C /usr/local -xzf go1.19.1.linux-amd64.tar.gz && rm go1.19.1.linux-amd64.tar.gz
+    echo -e "${Blue}Installing Golang ${GolangVersion}${Color_Off}"
+    wget -q https://golang.org/dl/go${GolangVersion}.linux-amd64.tar.gz && sudo tar -C /usr/local -xzf go${GolangVersion}.linux-amd64.tar.gz && rm go${GolangVersion}.linux-amd64.tar.gz
     fi
     mkdir -p "${HOME}/go"
     export GOPATH=$HOME/go
@@ -229,22 +229,22 @@ if [[ $BASEOS == "Linux" ]]; then
         echo -e "${Blue}Installing other repo deps...${Color_Off}"
         DEBIAN_FRONTEND=noninteractive sudo apt-get update && sudo apt-get install git ruby python3-pip curl iputils-ping net-tools unzip xsltproc bc rsync sudo wget nano bsdmainutils openssh-server fail2ban -y 
         echo -e "${Blue}Installing jq...${Color_Off}"
-        sudo wget -q -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && sudo chmod +x /usr/bin/jq
+        sudo wget -q -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.7.1/jq-linux64 && sudo chmod +x /usr/bin/jq
         echo -e "${Blue}Installing packer...${Color_Off}"
-        wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/1.8.1/packer_1.8.1_linux_amd64.zip && cd /tmp/ && unzip packer.zip && sudo mv packer /usr/bin/ && rm /tmp/packer.zip 
+        wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/${HashiCorpPackerVersion}/packer_${HashiCorpPackerVersion}_linux_amd64.zip && cd /tmp/ && unzip packer.zip && sudo mv packer /usr/bin/ && rm /tmp/packer.zip 
         echo -e "${Blue}Installing Interlace...${Color_Off}"
         sudo rm -fr /tmp/interlace
         git clone https://github.com/codingo/Interlace.git /tmp/interlace
         cd /tmp/interlace && sudo python3 setup.py install
 
-        elif [[ $OS == "Fedora" ]]; then
+     elif [[ $OS == "Fedora" ]]; then
         echo -e "${Blue}Installing other repo deps...${Color_Off}"
         sudo dnf update && sudo dnf -y install mmv bc fzf git rubypick python3-pip curl net-tools unzip util-linux fail2ban
         echo -e "${Blue}Installing jq...${Color_Off}"
-        sudo wget -q -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && sudo chmod +x /usr/bin/jq
+        sudo wget -q -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.7.1/jq-linux64 && sudo chmod +x /usr/bin/jq
         echo -e "${Blue}Installing packer...${Color_Off}"
-        wget -O /tmp/packer.zip https://releases.hashicorp.com/packer/1.8.1/packer_1.8.1_linux_amd64.zip && cd /tmp/ && unzip packer.zip && sudo mv packer /usr/bin/ && rm /tmp/packer.zip
-        fi
+        wget -q -O /tmp/packer.zip https://releases.hashicorp.com/packer/${HashiCorpPackerVersion}/packer_${HashiCorpPackerVersion}_linux_amd64.zip && cd /tmp/ && unzip packer.zip && sudo mv packer /usr/bin/ && rm /tmp/packer.zip 
+     fi
 fi
 
 if [[ $BASEOS == "Mac" ]]; then

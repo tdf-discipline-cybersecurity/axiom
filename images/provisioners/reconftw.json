@@ -18,9 +18,8 @@
         "echo 'Running dist-uprade'",
         "sudo apt update -qq",
         "DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew dist-upgrade -qq",
-
-        "echo 'Installing ufw fail2ban net-tools zsh jq build-essential python3-pip unzip git p7zip libpcap-dev rubygems ruby-dev grc'",
-        "sudo apt install fail2ban ufw net-tools zsh zsh-syntax-highlighting zsh-autosuggestions jq build-essential python3-pip unzip git p7zip libpcap-dev rubygems ruby-dev grc -y -qq",
+        "echo 'Installing ufw htop nmon fail2ban net-tools zsh jq build-essential python3-pip unzip git p7zip libpcap-dev rubygems ruby-dev grc'",
+        "sudo apt install fail2ban ufw htop nmon net-tools zsh zsh-syntax-highlighting zsh-autosuggestions jq build-essential python3-pip unzip git p7zip libpcap-dev rubygems ruby-dev grc -y -qq",
         "ufw allow 22",
         "ufw allow 2266",
         "ufw --force enable",
@@ -53,8 +52,8 @@
         "sudo service sshd restart",
         "chmod +x /etc/update-motd.d/00-header",
 
-        "echo 'Installing Golang 1.20.4'",
-        "wget -q https://golang.org/dl/go1.20.4.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.20.4.linux-amd64.tar.gz && rm go1.20.4.linux-amd64.tar.gz",
+        "echo 'Installing Golang 1.21.6'",
+        "wget -q https://golang.org/dl/go1.21.6.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz && rm go1.21.6.linux-amd64.tar.gz",
         "export GOPATH=/home/op/go",
 
         "echo 'Installing Docker'",
@@ -100,7 +99,7 @@
 
 
         "echo 'Installing axiom'",
-        "/bin/su -l op -c 'git clone https://github.com/pry0cc/axiom.git /home/op/.axiom && cd /home/op/.axiom/interact && ./axiom-configure --shell zsh --unattended'",
+        "/bin/su -l op -c 'git clone https://github.com/tdf-discipline-cybersecurity/axiom /home/op/.axiom && cd /home/op/.axiom/interact && ./axiom-configure --shell zsh --unattended'",
 
         "echo 'Installing commix'",
         "/bin/su -l op -c 'docker image build - < /home/op/lists/axiom-dockerfiles/commix/Dockerfile -t axiom/commix'",
@@ -166,10 +165,10 @@
 
         "echo 'Installing nmap'",
         "sudo apt-get -qy --no-install-recommends install build-essential libssl-dev flex bison",
-        "/bin/su -l op -c 'wget https://nmap.org/dist/nmap-7.92.tgz -O /home/op/recon/nmap.tar.gz && cd /home/op/recon/ && tar zxf nmap.tar.gz --transform s/nmap-7.92/nmap/ && rm nmap.tar.gz && cd /home/op/recon/nmap/ && sudo ./configure --without-ndiff --without-zenmap --without-nping  --without-ncat --without-nmap-update --with-libpcap=included && sudo make && sudo make install'",
+        "/bin/su -l op -c 'wget https://nmap.org/dist/nmap-7.94.tgz -O /home/op/recon/nmap.tar.gz && cd /home/op/recon/ && tar zxf nmap.tar.gz --transform s/nmap-7.94/nmap/ && rm nmap.tar.gz && cd /home/op/recon/nmap/ && sudo ./configure --without-ndiff --without-zenmap --without-nping  --without-ncat --without-nmap-update --with-libpcap=included && sudo make && sudo make install'",
 
         "echo 'Installing nuclei'",
-        "/bin/su -l op -c 'GO111MODULE=on /usr/local/go/bin/go install github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest && /home/op/go/bin/nuclei'",
+        "/bin/su -l op -c 'go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest'",
 
         "echo 'Installing puredns'",
         "/bin/su -l op -c 'GO111MODULE=on /usr/local/go/bin/go install github.com/d3mondev/puredns/v2@latest'",
@@ -211,8 +210,6 @@
         "curl 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o '/tmp/awscliv2.zip' && cd /tmp && unzip awscliv2.zip && sudo ./aws/install",
        
         "git clone https://github.com/projectdiscovery/nuclei-templates /home/op/recon/nuclei",
-        "echo 'Installing Nuclei'",
-        "/bin/su -l op -c 'go install github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest'",
         
         "/bin/su -l root -c 'apt-get clean'",
         "echo \"The password for user op is: {{ user `op_random_password` }}\"",

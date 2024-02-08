@@ -22,3 +22,8 @@ export BBlue='\033[1;34m'        # Blue
 export BPurple='\033[1;35m'      # Purple
 export BCyan='\033[1;36m'        # Cyan
 export BWhite='\033[1;37m'       # White
+
+# Versions
+export HashiCorpPackerVersion='1.10.1'
+export IBMPackerVersion='v3.2.3'
+export GolangVersion='1.21.6'
