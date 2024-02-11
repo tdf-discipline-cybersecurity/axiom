@@ -178,6 +178,9 @@
         "echo 'Installing s3scanner'",
         "/bin/su -l op -c 'pip3 install s3scanner'",
 
+        "echo 'Installing wapiti'",
+        "/bin/su -l op -c 'pip3 install wapiti3'",
+
         "echo 'Installing sqlmap'",
         "git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git /home/op/recon/sqlmap-dev",
 

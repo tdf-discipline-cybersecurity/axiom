@@ -1,0 +1,5 @@
+[{
+	"command":"/usr/local/bin/wapiti --url _target_ --format json -dr -o _output_/_cleantarget_ ",
+	"ext":"",
+	"threads":"1"
+}]
