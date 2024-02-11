@@ -56,8 +56,8 @@
         "wget -q https://golang.org/dl/go1.21.6.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz && rm go1.21.6.linux-amd64.tar.gz",
         "export GOPATH=/home/op/go",
 
-        "echo 'Installing Docker'",
-        "curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh && rm get-docker.sh",
+        "echo 'c'",
+        "curl -fsSL https://get.docker.com -o get-docker.sh && bash -xv get-docker.sh && rm get-docker.sh",
         "sudo usermod -aG docker op",
 
         "echo 'Installing Interlace'",
@@ -167,7 +167,7 @@
         "/bin/su -l op -c 'wget https://nmap.org/dist/nmap-7.94.tgz -O /home/op/recon/nmap.tar.gz && cd /home/op/recon/ && tar zxf nmap.tar.gz --transform s/nmap-7.94/nmap/ && rm nmap.tar.gz && cd /home/op/recon/nmap/ && sudo ./configure --without-ndiff --without-zenmap --without-nping  --without-ncat --without-nmap-update --with-libpcap=included && sudo make && sudo make install'",
 
         "echo 'Installing nuclei'",
-        "/bin/su -l op -c '/usr/local/go/bin/go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest'",
+        "/bin/su -l op -c '/usr/local/go/bin/go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest'",
 
         "echo 'Installing puredns'",
         "/bin/su -l op -c 'GO111MODULE=on /usr/local/go/bin/go install github.com/d3mondev/puredns/v2@latest'",
